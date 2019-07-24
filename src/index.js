@@ -17,11 +17,20 @@ const enhancer = composeEnhancers(
 
 const store = createStore(reducers, enhancer)
 
+function Boss() {
+    return (
+        <h1>11111</h1>
+    )
+}
+
 ReactDom.render(
     <Provider store={store}>
         <BrowserRouter>
             <div>
+                {/* 普通组件，如果也想获取路由的信息,可以在组件内部使用withRouter */}
                 <AuthRoute></AuthRoute>
+                {/* 下面是路由组件即在Route中用component包裹的组件 */}
+                <Route path='/boss' component={Boss}></Route>
                 <Route path='/login' component={Login}></Route>
                 <Route path='/register' component={Register}></Route>
             </div>
