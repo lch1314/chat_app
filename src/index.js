@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 import './config';
-import { Login, Register } from './container';
+import { Login, Register, BossInfo } from './container';
 import AuthRoute from './component/authroute/authroute';
 
 const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? 
@@ -25,6 +25,8 @@ ReactDom.render(
                 {/* 下面是路由组件即在Route中用component包裹的组件 */}
                 <Route path='/login' component={Login}></Route>
                 <Route path='/register' component={Register}></Route>
+                <Route path='/bossinfo' component={BossInfo}></Route>
+                {/* <Route path='/geniusinfo' component={BossInfo}></Route> */}
             </div>
         </BrowserRouter>
     </Provider>, 

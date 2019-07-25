@@ -2,3 +2,7 @@
     color: red;
     padding-left: 15px;
 }
+.touch-action {
+    /* 禁用元素上的所有属性 */
+    touch-action: none;   
+}
