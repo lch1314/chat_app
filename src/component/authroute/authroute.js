@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
@@ -27,9 +27,7 @@ class AuthRoute extends Component {
     }
 
     render() {
-        return (
-            <p></p>
-        )
+        return null
     }
 }
 
