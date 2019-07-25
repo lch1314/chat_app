@@ -1,13 +1,11 @@
 import axios from "axios";
-import { REGISTER_SUCCESS, ERROR_MSG, LOGIN_SUCCESS } from './constants';
+import { REGISTER_SUCCESS, ERROR_MSG, LOGIN_SUCCESS, LOAD_DATA } from './constants';
 import { getRedirectPath } from '../utils';
 
 const initState = {
     msg: '',
     isAuth: false,
     user: '',
-    pwd: '',
-    repeatpwd: '',
     type: 'genius',
     redirectTo: ''
 }
@@ -19,6 +17,8 @@ export function user(state=initState, action) {
             return {...state, msg: '', redirectTo: getRedirectPath(action.payload), isAuth: true, ...action.payload}
         case LOGIN_SUCCESS:
             return {...state, msg: '', redirectTo: getRedirectPath(action.payload), isAuth: true, ...action.payload}
+        case LOAD_DATA:
+            return {...state, ...action.payload}
         case ERROR_MSG:
             return {...state, isAuth: false, msg: action.msg}
         default:
@@ -47,6 +47,13 @@ function loginSuccess(data) {
         type: LOGIN_SUCCESS,
         payload: data
     }
+}
+
+export function loadData(userinfo) {
+   return {
+       type: LOAD_DATA,
+       payload: userinfo
+   }
 }
 
 export function login({user, pwd}) {

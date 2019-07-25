@@ -3,6 +3,7 @@ const utils = require('utility');   // 加密
 const Router = express.Router();
 const model = require('./model');
 const User = model.getModel('user');
+const _filter = { 'pwd': 0, '__v': 0};
 
 Router.get('/list', function(req, res) {
     // User.remove({}, function(e,d){ })   // 清除所有用户名和密码
@@ -14,10 +15,12 @@ Router.get('/list', function(req, res) {
 Router.post('/login', function(req, res) {
     const { user, pwd } = req.body;
     // findOne第一个参数是查询条件 第二个参数是显示条件
-    User.findOne({user, pwd: md5Pwd(pwd)}, {'pwd': 0}, function(err, doc) {
+    User.findOne({user, pwd: md5Pwd(pwd)}, _filter, function(err, doc) {
         if(!doc) {
            return res.json({code: 1, msg: '用户名或者密码错误'}) 
         }
+        // 设置cookie
+        res.cookie('userid', doc._id)
         return res.json({code: 0, data: doc})
     })
 })
@@ -25,24 +28,48 @@ Router.post('/login', function(req, res) {
 Router.post('/register', function(req, res) {
     const { user, pwd, type } = req.body;
     User.findOne({user}, function(err, doc) {
-        console.log(doc)
         if(doc) {
             return res.json({code: 1, msg: '用户名重复'})
         }
+        // const userModel = new User({user, type, pwd: md5Pwd(pwd)})
+        // userModel.save(function(e, d) {
+        //     console.log(d)
+        //     if(e) {
+        //         return res.json({code: 1, msg: '服务出错了'})
+        //     }
+        //     const { user, type, _id} = d;
+        //     res.cookie('userid', _id)
+        //     return res.json({code: 0, data: {user, type, _id}})
+        // })
+        // 用create也可以获取id
         User.create({user, type, pwd: md5Pwd(pwd) }, function(e, d) {
-            console.log(e)
+            console.log(d)
             if(e) {
                 return res.json({code: 1, msg: '服务出错了'})
             }
-            return res.json({code: 0})
+            const { user, type, _id} = d;
+            res.cookie('userid', _id)
+            return res.json({code: 0, data: {user, type, _id}})
         })
     })
 })
 
 Router.get('/info', function(req, res) {
-    return res.json({
-        code: 1
+    const { userid } = req.cookies;
+    if(!userid) {
+        return res.json({
+            code: 1
+        })
+    }
+    User.findOne({_id: userid}, _filter, function(err, doc) {
+        if(err) {
+            return res.json({code: 1, msg: '后端出错了'})
+        }
+        if(doc) {
+            return res.json({code: 0, data: doc})
+        }
     })
+    
 })
 
 // 目的：增加密码复杂性这样即使去www.cmd5.com这个网站也破解不了
