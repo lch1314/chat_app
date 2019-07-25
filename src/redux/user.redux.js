@@ -1,6 +1,6 @@
 import axios from "axios";
 import { REGISTER_SUCCESS, ERROR_MSG } from './constants';
-
+import { getRedirectPath } from '../utils';
 
 const initState = {
     msg: '',
@@ -8,14 +8,15 @@ const initState = {
     user: '',
     pwd: '',
     repeatpwd: '',
-    type: 'genius'
+    type: 'genius',
+    redirectTo: ''
 }
 
 // reducer
 export function user(state=initState, action) {
     switch(action.type) {
         case REGISTER_SUCCESS:
-            return {...state, msg: '', isAuth: true, ...action.payload}
+            return {...state, msg: '', redirectTo: getRedirectPath(action.payload), isAuth: true, ...action.payload}
         case ERROR_MSG:
             return {...state, isAuth: false, msg: action.msg}
         default:
@@ -39,7 +40,7 @@ function registerSuccess(data) {
     }
 }
 
-// 这个register其实也是一个action,只不过这个action返回的不是对象而是一个对象，当外面dispatch它的时候，它里面返回的这个函数会自动执行从而调接口
+// 这个register其实也是一个action,只不过这个action返回的不是对象而是一个函数，当外面dispatch它的时候，它里面返回的这个函数会自动执行从而调接口
 export function register({user, pwd, repeatpwd, type}) {
     if(!user || !pwd) {
         return errorMsg('用户名密码必须输入')
