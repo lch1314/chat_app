@@ -1,5 +1,5 @@
 import axios from "axios";
-import { REGISTER_SUCCESS, ERROR_MSG } from './constants';
+import { REGISTER_SUCCESS, ERROR_MSG, LOGIN_SUCCESS } from './constants';
 import { getRedirectPath } from '../utils';
 
 const initState = {
@@ -16,6 +16,8 @@ const initState = {
 export function user(state=initState, action) {
     switch(action.type) {
         case REGISTER_SUCCESS:
+            return {...state, msg: '', redirectTo: getRedirectPath(action.payload), isAuth: true, ...action.payload}
+        case LOGIN_SUCCESS:
             return {...state, msg: '', redirectTo: getRedirectPath(action.payload), isAuth: true, ...action.payload}
         case ERROR_MSG:
             return {...state, isAuth: false, msg: action.msg}
@@ -38,6 +40,33 @@ function registerSuccess(data) {
         type: REGISTER_SUCCESS,
         payload: data
     }
+}
+
+function loginSuccess(data) {
+    return {
+        type: LOGIN_SUCCESS,
+        payload: data
+    }
+}
+
+export function login({user, pwd}) {
+    if(!user || !pwd) {
+        return errorMsg('用户名密码必须输入')
+    }
+    return dispatch => {
+        axios.post('/user/login', {user, pwd}).then(res => {
+            if(res.status === 200 && res.data.code === 0) {
+                const action = loginSuccess(res.data.data);
+                dispatch(action)
+            }else {
+                const action = errorMsg(res.data.msg);
+                dispatch(action)
+            }
+        }).catch(() => {
+            console.log('error')
+        })
+    }
+    
 }
 
 // 这个register其实也是一个action,只不过这个action返回的不是对象而是一个函数，当外面dispatch它的时候，它里面返回的这个函数会自动执行从而调接口

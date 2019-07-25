@@ -5,8 +5,20 @@ const model = require('./model');
 const User = model.getModel('user');
 
 Router.get('/list', function(req, res) {
+    // User.remove({}, function(e,d){ })   // 清除所有用户名和密码
     User.find({}, function(err, doc) {
         return res.json(doc)
+    })
+})
+
+Router.post('/login', function(req, res) {
+    const { user, pwd } = req.body;
+    // findOne第一个参数是查询条件 第二个参数是显示条件
+    User.findOne({user, pwd: md5Pwd(pwd)}, {'pwd': 0}, function(err, doc) {
+        if(!doc) {
+           return res.json({code: 1, msg: '用户名或者密码错误'}) 
+        }
+        return res.json({code: 0, data: doc})
     })
 })
 
