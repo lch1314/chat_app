@@ -6,3 +6,19 @@
     /* 禁用元素上的所有属性 */
     touch-action: none;   
 }
+
+.am-tab-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.am-navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.page-content {
+    padding: 45px 5px;
+}
