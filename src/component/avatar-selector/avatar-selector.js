@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
 import { Grid, List } from 'antd-mobile';
 import '../../index.css';
 
-// @connect(
-// )
 class AvatarSelector extends Component {
     constructor(props) {
         super(props);

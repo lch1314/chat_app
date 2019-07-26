@@ -12,6 +12,7 @@ mongoose.connect(DB_URL, { useNewUrlParser: true }, function(err) {
         console.log('Connection success')
     }
 });
+mongoose.set('useFindAndModify', false);
 
 const models = {
     user: {
