@@ -6,9 +6,11 @@ const User = model.getModel('user');
 const _filter = { 'pwd': 0, '__v': 0};
 
 Router.get('/list', function(req, res) {
+    // post参数从body中获取,get参数从query中获取
+    const { type } = req.query;
     // User.remove({}, function(e,d){ })   // 清除所有用户名和密码
-    User.find({}, function(err, doc) {
-        return res.json(doc)
+    User.find({type}, function(err, doc) {
+        return res.json({code: 0, data: doc})
     })
 })
 

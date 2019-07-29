@@ -13,9 +13,7 @@ class NavLink extends Component {
         data: PropTypes.array.isRequired
     }
     render() {
-        console.log(this.props)
         const navList = this.props.data.filter(v => !v.hide);
-        console.log(navList)
         const { pathname } = this.props.location;
         return (
             <div>
