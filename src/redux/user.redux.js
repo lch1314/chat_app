@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AUTH_SUCCESS, ERROR_MSG, LOAD_DATA } from './constants';
+import { AUTH_SUCCESS, ERROR_MSG, LOAD_DATA, LOGIN_OUT } from './constants';
 import { getRedirectPath } from '../utils';
 
 const initState = {
@@ -18,6 +18,8 @@ export function user(state=initState, action) {
             return {...state, ...action.payload}
         case ERROR_MSG:
             return {...state, msg: action.msg}
+        case LOGIN_OUT:
+            return {...initState, redirectTo: '/login'}
         default:
             return state
     }
@@ -104,5 +106,12 @@ export function update(data) {
         }).catch(() => {
             console.log('error')
         })
+    }
+}
+
+
+export function loginoutSubmit() {
+    return {
+        type: LOGIN_OUT
     }
 }
