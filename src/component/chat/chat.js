@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { List, InputItem } from 'antd-mobile';
-// 由于是跨域，需要手动连接到9093
+import { connect } from 'react-redux';
+import { getMsgList } from '../../redux/chat.redux';
+// // 由于是跨域，需要手动连接到9093
 const socket = io('ws://localhost:9093');
 
+
+@connect(
+    state => state,
+    { getMsgList }
+)
 class Chat extends Component {
     constructor(props) {
         super(props);
@@ -13,12 +20,13 @@ class Chat extends Component {
         }
     }
     componentDidMount() {
-        socket.on('recvmsg', (data) => {
-            console.log(data)
-            this.setState({
-                msg: [...this.state.msg, data.text]
-            })
-        })
+        // socket.on('recvmsg', (data) => {
+        //     console.log(data)
+        //     this.setState({
+        //         msg: [...this.state.msg, data.text]
+        //     })
+        // })
+        this.props.getMsgList()
     }
 
     handleSumbit() {
