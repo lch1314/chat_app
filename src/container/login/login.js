@@ -4,30 +4,34 @@ import { Redirect } from 'react-router-dom';
 import Logo from '../../component/logo/logo';
 import { List, InputItem, WingBlank, WhiteSpace, Button } from 'antd-mobile';
 import { login } from '../../redux/user.redux';
+import chatForm from '../../component/chat-form/chat-form';
+
 
 @connect(
     state => state.user,
     { login }
 )
+@chatForm
 class Login extends Component {
     constructor(props) {
         super(props);
         this.register = this.register.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
-        this.state = {
-            user: '',
-            pwd: ''
-        }
+        console.log(this.props)
+        // this.state = {
+        //     user: '',
+        //     pwd: ''
+        // }
     }
 
-    handleChange(key, val) {
-        this.setState({
-            [key]: val    // key要加[],不然就是字符串,这种语法是ES6的属性名表达式
-        })
-    }
+    // handleChange(key, val) {
+    //     this.setState({
+    //         [key]: val    // key要加[],不然就是字符串,这种语法是ES6的属性名表达式
+    //     })
+    // }
 
     handleLogin() {
-        this.props.login(this.state)
+        this.props.login(this.props.state)
     }
 
     register() {
@@ -42,8 +46,8 @@ class Login extends Component {
                 <Logo />
                 <WingBlank>
                     <List>
-                        <InputItem onChange={v => this.handleChange('user', v)}>用户</InputItem> 
-                        <InputItem type="password" onChange={v => this.handleChange('pwd', v)}>密码</InputItem> 
+                        <InputItem onChange={v => this.props.handleChange('user', v)}>用户</InputItem> 
+                        <InputItem type="password" onChange={v => this.props.handleChange('pwd', v)}>密码</InputItem> 
                     </List>
                     <WhiteSpace/>
                     <Button type="primary" onClick={this.handleLogin}>登录</Button>
