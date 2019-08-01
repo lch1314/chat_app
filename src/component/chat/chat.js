@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { List, InputItem, NavBar, Icon } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux';
+import { getChatId } from '../../utils';
 const Item = List.Item;
 
 
@@ -37,9 +38,13 @@ class Chat extends Component {
         this.setState({text: ''})
     }
     render() {
-        const { chat } = this.props;
+        const { chat, user } = this.props;
+        const { users, chatmsg } = chat;
+        const { _id } = user;
         const { id } = this.props.match.params;
-        const { users } = this.props.chat;
+        // id代表点击的这个人的id    _id代表当前登录用户的id
+        const currentChatid = getChatId(id, _id);
+        // console.log(chatmsg.filter(v => v.chatid === currentChatid))
         if(!users[id]) {
             return null
         }
@@ -55,7 +60,7 @@ class Chat extends Component {
                     {users[id].name}
                 </NavBar>
                 {
-                    chat.chatmsg.map(v => {
+                    chatmsg.filter(v => v.chatid === currentChatid).map(v => {
                         const avatar = require(`../img/${users[v.from].avatar}.png`)
                         return v.from === id? (
                             <List key={v._id}>
