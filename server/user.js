@@ -94,14 +94,22 @@ Router.post('/update',function(req, res) {
 
 Router.get('/getmsglist', function(req, res) {
     // console.log(req.cookies)
-    // const { userid } = req.cookies;
-    // {'$or': [{from: userid, to: userid}]}
-    // Chat.remove({}, function(e,d){ })   // 清除所有聊天信息
-    // 查询所有消息列表
-    Chat.find({}, function(err, doc) {
-        if(!err) {
-            res.json({code: 0, msgs: doc})
-        }
+    const { userid } = req.cookies;
+    // 查询所有用户信息
+    User.find({}, function(e, userdoc) {
+        console.log(userdoc)
+        let users = {}
+        // 查到之后遍历,把id当做key
+        userdoc.forEach(v => {
+            users[v._id] = {name: v.user, avatar: v.avatar}
+        })
+        // Chat.remove({}, function(e,d){ })   // 清除所有聊天信息
+        // 然后再去查询消息列表
+        Chat.find({'$or': [{from: userid}, {to: userid}]}, function(err, doc) {
+            if(!err) {
+                res.json({code: 0, msgs: doc, users: users})
+            }
+        })
     })
 })
 

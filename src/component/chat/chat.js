@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { List, InputItem, NavBar } from 'antd-mobile';
+import { List, InputItem, NavBar, Icon } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { sendMsg } from '../../redux/chat.redux';
+import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux';
 const Item = List.Item;
 
 
 @connect(
     state => state,
-    {  sendMsg }
+    { sendMsg, getMsgList, recvMsg }
 )
 class Chat extends Component {
     constructor(props) {
@@ -18,8 +18,11 @@ class Chat extends Component {
         }
     }
     componentDidMount() {
-        // this.props.getMsgList();
-        // this.props.recvMsg()
+        // 如果长度为0，表示没有聊天记录
+        if(!this.props.chat.chatmsg.length) {
+            this.props.getMsgList();
+            this.props.recvMsg()
+        }
     }
 
     handleSumbit() {
@@ -35,18 +38,29 @@ class Chat extends Component {
     }
     render() {
         const { chat } = this.props;
-        const { id } = this.props.match.params
+        const { id } = this.props.match.params;
+        const { users } = this.props.chat;
+        if(!users[id]) {
+            return null
+        }
         return (
             <div id='chat-page'>
-                <NavBar mode='dark'>
-                    {id}
+                <NavBar 
+                    mode='dark'
+                    icon={<Icon type="left" />}
+                    onLeftClick={() => {
+                       this.props.history.goBack() 
+                    }}
+                >
+                    {users[id].name}
                 </NavBar>
                 {
-                    chat.chatmsg.map(v => (
-                        v.from === id? (
+                    chat.chatmsg.map(v => {
+                        const avatar = require(`../img/${users[v.from].avatar}.png`)
+                        return v.from === id? (
                             <List key={v._id}>
                                 <Item
-                                    // thumb={}
+                                    thumb={avatar}
                                 >
                                     {v.content}
                                 </Item>
@@ -54,14 +68,14 @@ class Chat extends Component {
                         ) : (
                             <List key={v._id}>
                                 <Item 
-                                    extra={'avatar'}
+                                    extra={<img src={avatar} alt=''/>}
                                     className='chat-me'
                                 >
                                     {v.content}
                                 </Item>
                             </List>
                         )
-                    ))
+                    })
                 }
                 <div className="stick-footer">
                     <List>
