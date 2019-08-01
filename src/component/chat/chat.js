@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, InputItem, NavBar, Icon } from 'antd-mobile';
+import { List, InputItem, NavBar, Icon, Grid  } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux';
 import { getChatId } from '../../utils';
@@ -15,7 +15,8 @@ class Chat extends Component {
         super(props);
         console.log(this.props)
         this.state = { 
-            text: ''
+            text: '',
+            showEmoji: false
         }
     }
     componentDidMount() {
@@ -24,6 +25,13 @@ class Chat extends Component {
             this.props.getMsgList();
             this.props.recvMsg()
         }
+        this.fixCarousel()
+    }
+
+    fixCarousel() {
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'))
+        }, 0)
     }
 
     handleSumbit() {
@@ -35,9 +43,17 @@ class Chat extends Component {
         const msg = this.state.text;
         this.props.sendMsg({from, to, msg})
         // 输入完之后情况聊天框
-        this.setState({text: ''})
+        this.setState({
+            text: '',
+            showEmoji: false
+        })
     }
     render() {
+        const emoji = '😀 😃 😄 😁 😆 😅 🤣 😂 🙂 🙃 😉 😊 😇 😍 😰 🤩 😘 😗 😚 😛 😪 😏 😭 😥 😲 ☹️ 😱 😕 😈 😸 💋 👌 🤞 👋 🤚 🖖 🤟 🤘 🖕 👍 👇 👎 🙏 💪 💀 👾 😽 😿 🙌'
+            .split(' ')
+            .filter(v => v)
+            .map(v => ({text: v}))
+        const { showEmoji, text } = this.state;
         const { chat, user } = this.props;
         const { users, chatmsg } = chat;
         const { _id } = user;
@@ -90,11 +106,36 @@ class Chat extends Component {
                             onChange={v => {
                                 this.setState({text: v})
                             }}
-                            extra={<span onClick={() => this.handleSumbit()}>发送</span>}
+                            extra={
+                                <div>
+                                    <span style={{marginRight: 15}} onClick={() => {
+                                        this.setState({
+                                            showEmoji: !showEmoji
+                                        })
+                                        this.fixCarousel()
+                                    }}>😀</span>
+                                    <span onClick={() => this.handleSumbit()}>发送</span>
+                                </div>
+                            }
                         >
                             信息
                         </InputItem>
                     </List>
+                    {
+                        showEmoji?<Grid 
+                            className="touch-action"
+                            data={emoji}  
+                            columnNum={9}
+                            carouselMaxRow={4}
+                            isCarousel={true}
+                            onClick={el => {
+                                this.setState({
+                                    text: text + el.text
+                                })
+                            }}
+                        /> : null
+                    }
+                    
                 </div>
             </div>
         )

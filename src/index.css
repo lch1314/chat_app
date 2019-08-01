@@ -40,3 +40,11 @@
 	bottom: 0;
 	width:100%;
 }
+
+#chat-page .am-grid-icon {
+    display: none;
+}
+
+#chat-page .am-grid-text {
+    margin-top: 0;
+}
