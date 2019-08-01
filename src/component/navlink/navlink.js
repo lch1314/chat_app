@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 @connect(
-    state => state
+    state => state.chat
 )
 @withRouter
 class NavLink extends Component {
@@ -15,6 +15,7 @@ class NavLink extends Component {
     render() {
         const navList = this.props.data.filter(v => !v.hide);
         const { pathname } = this.props.location;
+        const { unread } = this.props;
         return (
             <div>
                <TabBar>
@@ -23,6 +24,7 @@ class NavLink extends Component {
                            <TabBar.Item
                             title={v.text}
                             key={v.path}
+                            badge={v.path === '/msg' ? unread : null}
                             icon={{uri: require(`../navimg/${v.icon}.png`)}}
                             selectedIcon={{ uri: require(`../navimg/${v.icon}-active.png`) }}
                             selected={pathname === v.path}

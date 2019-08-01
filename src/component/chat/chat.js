@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { List, InputItem, NavBar } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux';
+import { sendMsg } from '../../redux/chat.redux';
 const Item = List.Item;
 
 
 @connect(
     state => state,
-    { getMsgList, sendMsg, recvMsg }
+    {  sendMsg }
 )
 class Chat extends Component {
     constructor(props) {
@@ -18,8 +18,8 @@ class Chat extends Component {
         }
     }
     componentDidMount() {
-        this.props.getMsgList();
-        this.props.recvMsg()
+        // this.props.getMsgList();
+        // this.props.recvMsg()
     }
 
     handleSumbit() {
