@@ -3,6 +3,7 @@ const utils = require('utility');   // 加密
 const Router = express.Router();
 const model = require('./model');
 const User = model.getModel('user');
+const Chat = model.getModel('chat');
 const _filter = { 'pwd': 0, '__v': 0};
 
 Router.get('/list', function(req, res) {
@@ -87,6 +88,20 @@ Router.post('/update',function(req, res) {
             type: doc.type
         }, body)
         return res.json({ code: 0, data })
+    })
+})
+
+
+Router.get('/getmsglist', function(req, res) {
+    // console.log(req.cookies)
+    // const { userid } = req.cookies;
+    // {'$or': [{from: userid, to: userid}]}
+    // Chat.remove({}, function(e,d){ })   // 清除所有聊天信息
+    // 查询所有消息列表
+    Chat.find({}, function(err, doc) {
+        if(!err) {
+            res.json({code: 0, msgs: doc})
+        }
     })
 })
 

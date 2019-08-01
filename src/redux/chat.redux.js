@@ -9,13 +9,12 @@ const initState = {
 }
 
 
-
-
 export function chat(state=initState, action) {
     switch(action.type) {
         case MSG_LIST:
             return {...state, chatmsg: action.payload, unread: action.payload.filter(v => !v.read).length}
-        // case MSG_RECV:
+        case MSG_RECV:
+            return {...state, chatmsg: [...state.chatmsg, action.payload], unread: state.unread+1}
         // case MSG_READ:
         default:
             return state
@@ -38,6 +37,30 @@ export function getMsgList() {
                 const action = msgList(res.data.msgs);
                 dispatch(action)
             }
+        })
+    }
+}
+
+export function sendMsg({from, to, msg}) {
+    return dispatch => {
+        socket.emit('sendmsg', {from, to, msg})
+    }
+}
+
+function msgRecv(msg) {
+    return {
+        type: MSG_RECV,
+        payload: msg
+    }
+}
+
+// 监听全局消息
+export function recvMsg() {
+    return dispatch => {
+        socket.on('recvmsg', function(data) {
+            console.log(data)
+            const action = msgRecv(data._doc)
+            dispatch(action)
         })
     }
 }

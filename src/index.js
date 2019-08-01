@@ -30,7 +30,7 @@ ReactDom.render(
                     <Route path='/register' component={Register}></Route>
                     <Route path='/bossinfo' component={BossInfo}></Route>
                     <Route path='/geniusinfo' component={GeniusInfo}></Route>
-                    <Route path='/chat/:user' component={Chat}></Route>
+                    <Route path='/chat/:id' component={Chat}></Route>
                     <Route component={Dashboard}></Route>
                 </Switch>
             </div>

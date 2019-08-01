@@ -1,47 +1,66 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
-import { List, InputItem } from 'antd-mobile';
+import { List, InputItem, NavBar } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { getMsgList } from '../../redux/chat.redux';
-// // 由于是跨域，需要手动连接到9093
-const socket = io('ws://localhost:9093');
+import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux';
+const Item = List.Item;
 
 
 @connect(
     state => state,
-    { getMsgList }
+    { getMsgList, sendMsg, recvMsg }
 )
 class Chat extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props)
         this.state = { 
-            text: '',
-            msg: []
+            text: ''
         }
     }
     componentDidMount() {
-        // socket.on('recvmsg', (data) => {
-        //     console.log(data)
-        //     this.setState({
-        //         msg: [...this.state.msg, data.text]
-        //     })
-        // })
-        this.props.getMsgList()
+        this.props.getMsgList();
+        this.props.recvMsg()
     }
 
     handleSumbit() {
-       console.log(this.state) 
-       // 从前端发送消息给后端
-       socket.emit('sendmsg', {text: this.state.text})
-       // 清空输入框
-       this.setState({text: ''})
+        // 当前登录的这个人的id
+        const from = this.props.user._id;
+        // 点击想要聊天的这个人的id
+        const to = this.props.match.params.id;
+        // 输入框输入的聊天内容
+        const msg = this.state.text;
+        this.props.sendMsg({from, to, msg})
+        // 输入完之后情况聊天框
+        this.setState({text: ''})
     }
     render() {
+        const { chat } = this.props;
+        const { id } = this.props.match.params
         return (
-            <div>
+            <div id='chat-page'>
+                <NavBar mode='dark'>
+                    {id}
+                </NavBar>
                 {
-                    this.state.msg.map(v => (
-                        <p key={v}>{v}</p>
+                    chat.chatmsg.map(v => (
+                        v.from === id? (
+                            <List key={v._id}>
+                                <Item
+                                    // thumb={}
+                                >
+                                    {v.content}
+                                </Item>
+                            </List>
+                        ) : (
+                            <List key={v._id}>
+                                <Item 
+                                    extra={'avatar'}
+                                    className='chat-me'
+                                >
+                                    {v.content}
+                                </Item>
+                            </List>
+                        )
                     ))
                 }
                 <div className="stick-footer">
