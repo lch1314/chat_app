@@ -5,7 +5,6 @@ import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux';
 import { getChatId } from '../../utils';
 const Item = List.Item;
 
-
 @connect(
     state => state,
     { sendMsg, getMsgList, recvMsg }
@@ -29,6 +28,7 @@ class Chat extends Component {
     }
 
     fixCarousel() {
+        // 解决emoji标签撑不开的bug
         setTimeout(function() {
             window.dispatchEvent(new Event('resize'))
         }, 0)
@@ -40,8 +40,10 @@ class Chat extends Component {
         // 点击想要聊天的这个人的id
         const to = this.props.match.params.id;
         // 输入框输入的聊天内容
-        const msg = this.state.text;
-        this.props.sendMsg({from, to, msg})
+        const msg = this.state.text.trim();
+        if(msg) {
+            this.props.sendMsg({from, to, msg})
+        }
         // 输入完之后情况聊天框
         this.setState({
             text: '',
@@ -108,7 +110,7 @@ class Chat extends Component {
                             }}
                             extra={
                                 <div>
-                                    <span style={{marginRight: 15}} onClick={() => {
+                                    <span role="img" aria-label="Description of the overall image" style={{marginRight: 15}} onClick={() => {
                                         this.setState({
                                             showEmoji: !showEmoji
                                         })
