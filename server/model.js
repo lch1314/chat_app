@@ -35,7 +35,7 @@ const models = {
         'to': {type: String, require: true},
         'read': {type: Boolean, default: false},
         'content': {type: String, require: true, default: ''},
-        'createTime': {type: Number,  default: new Date().getTime()},
+        'createTime': {type: Number,  default: Date.now()},
 
     }
 }
