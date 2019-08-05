@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { List, InputItem, NavBar, Icon, Grid  } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { sendMsg, getMsgList, recvMsg } from '../../redux/chat.redux';
+import { sendMsg, getMsgList, recvMsg, readMsg } from '../../redux/chat.redux';
 import { getChatId } from '../../utils';
 const Item = List.Item;
 
 @connect(
     state => state,
-    { sendMsg, getMsgList, recvMsg }
+    { sendMsg, getMsgList, recvMsg, readMsg }
 )
 class Chat extends Component {
     constructor(props) {
@@ -27,8 +27,15 @@ class Chat extends Component {
         this.fixCarousel()
     }
 
+    // 用户离开这个路由，当前组件就会被销毁，走这个钩子函数
+    componentWillUnmount() {
+        // 标记是和谁聊天
+        const to = this.props.match.params.id;
+        this.props.readMsg(to)
+    }
+
+    // 解决emoji标签撑不开的bug
     fixCarousel() {
-        // 解决emoji标签撑不开的bug
         setTimeout(function() {
             window.dispatchEvent(new Event('resize'))
         }, 0)

@@ -91,7 +91,6 @@ Router.post('/update',function(req, res) {
     })
 })
 
-
 Router.get('/getmsglist', function(req, res) {
     // console.log(req.cookies)
     const { userid } = req.cookies;
@@ -110,6 +109,23 @@ Router.get('/getmsglist', function(req, res) {
                 res.json({code: 0, msgs: doc, users: users})
             }
         })
+    })
+})
+
+Router.post('/readmsg', function(req, res) {
+    const { userid } = req.cookies;
+    const { from } = req.body;
+    console.log(userid, from)
+    Chat.update(
+        {from, to: userid}, 
+        {'$set': {read: true}}, 
+        {'multi': true}, 
+        function(err, doc) {
+        console.log(doc)
+        if(!err) {
+            return res.json({code: 0, num: doc.nModified})
+        }
+        return res.json({code: 1, msg: '修改失败'})
     })
 })
 

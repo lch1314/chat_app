@@ -21,6 +21,7 @@ class Msg extends Component {
             msgGroup[v.chatid] = msgGroup[v.chatid] || [];
             msgGroup[v.chatid].push(v)
         })
+        // 最新消息排序
         const chatList = Object.values(msgGroup).sort((a,b) => {
             const a_last = this.getLast(a).createTime;
             const b_last = this.getLast(b).createTime;
