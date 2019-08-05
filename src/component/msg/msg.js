@@ -21,7 +21,11 @@ class Msg extends Component {
             msgGroup[v.chatid] = msgGroup[v.chatid] || [];
             msgGroup[v.chatid].push(v)
         })
-        const chatList = Object.values(msgGroup)
+        const chatList = Object.values(msgGroup).sort((a,b) => {
+            const a_last = this.getLast(a).createTime;
+            const b_last = this.getLast(b).createTime;
+            return b_last - a_last;
+        })
         console.log(chatList)
 
         // 按照聊天用户分组，根据chatid
@@ -38,6 +42,10 @@ class Msg extends Component {
                                 key={lastItem._id}
                                 extra={<Badge text={unreadNum}></Badge>}
                                 thumb={require(`../img/${users[targetId].avatar}.png`)}
+                                arrow='horizontal'
+                                onClick={() => {
+                                    this.props.history.push(`/chat/${targetId}`)
+                                }}
                             >
                                 {lastItem.content}
                                <Brief>{users[targetId] && users[targetId].name}</Brief> 
