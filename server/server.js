@@ -7,6 +7,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const model = require('./model');
 const Chat = model.getModel('chat');
+const path = require('path');
 
 io.on('connection', function(socket) {
     // console.log(socket)
@@ -18,7 +19,7 @@ io.on('connection', function(socket) {
         const chatid = [from,to].sort().join('_');
         // 把当前这条聊天信息插入到数据库中
         Chat.create({chatid, from, to, content: msg}, function(err, doc) {
-            console.log('222',doc)
+            // console.log('222',doc)
             // 入库之后并把消息发送给前端（全局）,前端在chat.redux中监听这个事件
             io.emit('recvmsg', Object.assign({}, doc))
         })
@@ -30,7 +31,13 @@ app.use(cookieParser());
 // 解析post数据
 app.use(bodyParser.json());
 app.use('/user', userRouter);
-
+app.use(function(req, res, next) {
+    if(req.url.startsWith('/user/') || req.url.startsWith('/static/')) {
+        return next()
+    }
+    return res.sendFile(path.resolve('build/index.html'))
+})
+app.use('/', express.static(path.resolve('build')))
 server.listen(9093,function() {
     console.log('Node app start at port 9093')
 })
