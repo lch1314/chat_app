@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavBar } from 'antd-mobile';
 import NavLink from '../navlink/navlink';
-import { Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Boss from '../boss/boss';
 import Genius from '../genius/genius';
 import User from '../user/user';
 import Msg from '../msg/msg';
 import { getMsgList, recvMsg } from '../../redux/chat.redux';
+import QueueAnim from 'rc-queue-anim';
 
 @connect(
     state => state,
@@ -56,18 +57,25 @@ class Dashboard extends Component {
                 component: User
             }
         ]
+        const page = navList.find(v => v.path === pathname);
         return (
             <div>
                 <NavBar className="fixed-header" mode="dark"
-                >{navList.find(v => v.path === pathname).title}</NavBar>
+                >{page.title}</NavBar>
                 <div>
-                    <Switch>
-                        {
-                            navList.map(v => (
-                                <Route key={v.path} path={v.path} component={v.component}></Route>
-                            ))
-                        }
-                    </Switch>
+                    {/* 不能这样用，要想动画生效，必须只渲染一个Route, 根据当前的path决定组件 */}
+                    {/* <QueueAnim type={'scaleX'} duration={800}>
+                        <Switch>
+                            {
+                                navList.map(v => (
+                                    <Route key={v.path} path={v.path} component={v.component}></Route>
+                                ))
+                            }
+                        </Switch>
+                    </QueueAnim> */}
+                    <QueueAnim type={'scaleX'} duration={800}>
+                        <Route key={page.path} path={page.path} component={page.component}></Route>
+                    </QueueAnim>
                 </div>
                 <NavLink data={navList}></NavLink>
             </div>

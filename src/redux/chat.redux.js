@@ -90,14 +90,23 @@ function msgRead({from, userid, num}) {
     }
 }
 
+// 使用async+await改写
 export function readMsg(from) {
-    return (dispatch,getState) => {
-        axios.post('/user/readmsg', {from}).then(res => {
-            const userid = getState().user._id;
-            if(res.status === 200 && res.data.code === 0) {
-                const action = msgRead({from, userid, num:res.data.num})
-                dispatch(action)
-            }
-        })
+    return async (dispatch,getState) => {
+        const res = await axios.post('/user/readmsg', {from});
+        const userid = getState().user._id;
+        if(res.status === 200 && res.data.code === 0) {
+            const action = msgRead({from, userid, num:res.data.num})
+            dispatch(action)
+        }
     }
+    // return (dispatch,getState) => {
+    //     axios.post('/user/readmsg', {from}).then(res => {
+    //         const userid = getState().user._id;
+    //         if(res.status === 200 && res.data.code === 0) {
+    //             const action = msgRead({from, userid, num:res.data.num})
+    //             dispatch(action)
+    //         }
+    //     })
+    // }
 }
