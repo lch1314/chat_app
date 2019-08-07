@@ -1,13 +1,32 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+// const express = require('express');
+// const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
+// const path = require('path');
+// const React = require('react');
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import React from 'react';
+
 const app = express();
 const userRouter = require('./user');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const model = require('./model');
 const Chat = model.getModel('chat');
-const path = require('path');
+
+
+function Ap() {
+    return <h2>server render</h2>
+}
+
+console.log(Ap())
+
+// var ReactDOMServer = require('react-dom/server');
+// var renderToString = ReactDOMServer.renderToString
+// var renderToStaticMarkup = ReactDOMServer.renderToStaticMarkup
 
 io.on('connection', function(socket) {
     // console.log(socket)

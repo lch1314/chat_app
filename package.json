@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@babel/core": "7.4.3",
     "@svgr/webpack": "4.1.0",
     "@typescript-eslint/eslint-plugin": "1.6.0",
     "@typescript-eslint/parser": "1.6.0",
     "axios": "^0.19.0",
+    "babel-cli": "^7.0.0-beta.3",
+    "babel-core": "^6.26.3",
     "babel-eslint": "10.0.1",
     "babel-jest": "^24.8.0",
     "babel-loader": "8.0.5",
+    "babel-node": "^7.0.0-beta.3",
     "babel-plugin-import": "^1.12.0",
     "babel-plugin-named-asset-import": "^0.3.2",
     "babel-preset-react-app": "^9.0.0",
@@ -19,6 +21,7 @@
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^5.2.0",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -79,7 +82,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "server": "nodemon server/server.js"
+    "server": "nodemon server/server.js",
+    "server_bak": "cross-env NODE_ENV=test nodemon --exec babel-node server/server.js"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -168,6 +172,9 @@
   },
   "proxy": "http://localhost:9093",
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "antd-mobile": "^2.2.14"
   }
